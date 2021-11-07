@@ -49,5 +49,50 @@ namespace MovieLibrary.Api.Controllers
                 return Ok(movies);
             }
         }
+
+        [HttpPost]
+        public async Task<ActionResult<int?>> AddMovie([FromBody] MovieCreateDTO movie)
+        {
+            int? id = await _service.AddMovie(movie);
+
+            if (id is null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(id);
+            }
+        }
+
+        [HttpDelete("{movieId}")]
+        public async Task<ActionResult> DeleteMovie([FromRoute] int movieId)
+        {
+            bool result = await _service.DeleteMovie(movieId);
+
+            if (result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        //[HttpPut]
+        //public async Task<ActionResult<MovieDTO>> UpdateCategory([FromBody] MovieDTO movie)
+        //{
+        //    var c = await _service.UpdateMovie(movie);
+
+        //    if (c != null)
+        //    {
+        //        return Ok(c);
+        //    }
+        //    else
+        //    {
+        //        return NotFound();
+        //    }
+        //}
     }
 }

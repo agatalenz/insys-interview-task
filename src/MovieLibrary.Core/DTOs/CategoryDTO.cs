@@ -15,5 +15,14 @@ namespace MovieLibrary.Core.DTOs
             Id = category.Id;
             Name = category.Name;
         }
+
+        public Category ToCategory()
+        {
+            return new Category()
+            {
+                Id = this.Id,
+                Name = this.Name
+            };
+        }
     }
 }

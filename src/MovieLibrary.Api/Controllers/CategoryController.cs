@@ -35,7 +35,7 @@ namespace MovieLibrary.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetMovies()
+        public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetCategories()
         {
             var categories = await _service.ListAsync();
 
@@ -48,5 +48,50 @@ namespace MovieLibrary.Api.Controllers
                 return Ok(categories);
             }
         }
+
+        [HttpPost]
+        public async Task<ActionResult<int?>> AddCategory([FromBody] CategoryCreateDTO category)
+        {
+            int? id = await _service.AddCategory(category);
+
+            if (id is null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(id);
+            }
+        }
+
+        [HttpDelete("{categoryId}")]
+        public async Task<ActionResult> DeleteCategory([FromRoute] int categoryId)
+        {
+            bool result = await _service.DeleteCategory(categoryId);
+
+            if (result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        //[HttpPut]
+        //public async Task<ActionResult<CategoryDTO>> UpdateCategory([FromBody] CategoryDTO category)
+        //{
+        //    var c = await _service.UpdateCategory(category);
+
+        //    if (c != null)
+        //    {
+        //        return Ok(c);
+        //    }
+        //    else
+        //    {
+        //        return NotFound();
+        //    }
+        //}
     }
 }

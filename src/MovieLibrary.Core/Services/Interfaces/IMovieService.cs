@@ -10,5 +10,8 @@ namespace MovieLibrary.Core.Services
     {
         Task<MovieDTO> GetMovieByIdAsync(int id);
         Task<IEnumerable<MovieDTO>> ListAsync();
+        Task<int> AddMovie(MovieCreateDTO movie);
+        Task<bool> DeleteMovie(int id);
+        Task<MovieDTO> UpdateMovie(MovieDTO movie);
     }
 }

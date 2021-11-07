@@ -3,9 +3,8 @@ using MovieLibrary.Data.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using MovieLibrary.Data.Entities;
 
 namespace MovieLibrary.Core.Services
 {
@@ -16,6 +15,26 @@ namespace MovieLibrary.Core.Services
         public MovieService(IMovieRepository repository)
         {
             _repository = repository;
+        }
+
+        public async Task<int> AddMovie(MovieCreateDTO movie)
+        {
+            return await _repository.CreateAsync(new Movie()
+            {
+                Title = movie.Title,
+                Description = movie.Description,
+                Year = movie.Year,
+                ImdbRating = movie.ImdbRating,
+            });
+        }
+
+        public async Task<bool> DeleteMovie(int id)
+        {
+            var movie = await _repository.GetByIdAsync(id);
+            if (movie is null) return false;
+
+            await _repository.DeleteAsync(movie);
+            return true;
         }
 
         public async Task<MovieDTO> GetMovieByIdAsync(int id)
@@ -33,6 +52,11 @@ namespace MovieLibrary.Core.Services
 
             return from m in movies
                    select new MovieDTO(m);
+        }
+
+        public Task<MovieDTO> UpdateMovie(MovieDTO movie)
+        {
+            throw new NotImplementedException();
         }
     }
 }
