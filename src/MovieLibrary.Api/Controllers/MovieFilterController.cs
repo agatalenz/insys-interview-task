@@ -19,25 +19,10 @@ namespace MovieLibrary.Api.Controllers
             _service = service;
         }
 
-        [HttpGet("{movieId}")]
-        public async Task<ActionResult<MovieDTO>> GetMovieById([FromRoute] int movieId)
-        {
-            var movie = await _service.GetMovieByIdAsync(movieId);
-
-            if (movie is null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(movie);
-            }
-        }
-
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies()
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies(int page = 0, int moviesPerPage = 5, string text = "", [FromQuery] int[] categories = null, double minImdb = 0, double maxImdb = 10 )
         {
-            var movies = await _service.ListMoviesAsync();
+            var movies = await _service.ListMoviesAsync(page, moviesPerPage, text, categories, minImdb, maxImdb);
 
             if (movies is null)
             {

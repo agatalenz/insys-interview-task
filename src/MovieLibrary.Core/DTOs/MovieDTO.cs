@@ -22,19 +22,7 @@ namespace MovieLibrary.Core.DTOs
             Description = movie.Description;
             Year = movie.Year;
             ImdbRating = movie.ImdbRating;
-            Categories = movie.MovieCategories.Select(mc => new CategoryDTO(mc.Category));
-        }
-
-        public Movie ToMovie()
-        {
-            return new Movie()
-            {
-                Id = this.Id,
-                Title = this.Title,
-                Description = this.Description,
-                Year = this.Year,
-                ImdbRating = this.ImdbRating
-            };
+            Categories = movie.MovieCategories.Select(mc => new CategoryDTO() { Id = mc.CategoryId, Name = mc.Category.Name });
         }
     }
 }

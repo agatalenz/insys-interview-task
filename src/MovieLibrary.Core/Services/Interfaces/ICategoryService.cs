@@ -12,7 +12,6 @@ namespace MovieLibrary.Core.Services
     {
         Task<Category> GetCategoryByIdAsync(int id);
         IQueryable<Category> List();
-        //Task<IEnumerable<Category>> ListAsync();
         Task<int?> AddCategory(string name);
         Task<bool> DeleteCategory(int id);
         Task<Category> UpdateCategory(Category category);

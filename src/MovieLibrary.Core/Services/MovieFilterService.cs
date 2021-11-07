@@ -18,27 +18,35 @@ namespace MovieLibrary.Core.Services
             _repository = repository;
         }
 
-        public async Task<MovieDTO> GetMovieByIdAsync(int id)
+        public async Task<IEnumerable<MovieDTO>> ListMoviesAsync(int page, int moviesPerPage, string text, int[] categories, double minImdb, double maxImdb)
         {
-            var movie = await _repository
-                                .List()
-                                .Include(mc => mc.MovieCategories)
-                                .ThenInclude(c => c.Category)
-                                .SingleOrDefaultAsync(m => m.Id == id);
+            var movies = await ListMoviesAsync(text, categories, minImdb, maxImdb);
+            if (page < 1) return movies;
 
-            return new MovieDTO(movie);
+            try
+            {
+                return movies.Skip((page - 1) * moviesPerPage).Take(moviesPerPage);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
-        public async Task<IEnumerable<MovieDTO>> ListMoviesAsync()
+        public async Task<IEnumerable<MovieDTO>> ListMoviesAsync(string text, int[] categories, double minImdb, double maxImdb)
         {
             var movies = await _repository
-                                .List()
-                                .Include(mc => mc.MovieCategories)
-                                .ThenInclude(c => c.Category)
-                                .ToListAsync();
+                .List()
+                .OrderByDescending(m => (double)m.ImdbRating)
+                .Include(mc => mc.MovieCategories)
+                .ThenInclude(c => c.Category)
+                .Select(m => new MovieDTO(m))
+                .ToListAsync();
 
-            return from m in movies
-                   select new MovieDTO(m);
+            return movies.Where(m =>
+                                m.Title.Contains(text) && 
+                                (!categories.Any() || m.Categories.Any(c => categories.Contains(c.Id))) && 
+                                (double)m.ImdbRating >= minImdb && (double)m.ImdbRating <= maxImdb);
         }
     }
 }
