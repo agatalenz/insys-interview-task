@@ -20,14 +20,10 @@ namespace MovieLibrary.Core.Services
 
         public async Task<CategoryDTO> GetCategoryByIdAsync(int id)
         {
-            var c = await _repository.GetByIdAsync(id);
-            if (c is null) return null;
+            var category = await _repository.GetByIdAsync(id);
+            if (category is null) return null;
 
-            return new CategoryDTO()
-            {
-                Id = c.Id,
-                Name = c.Name,
-            };
+            return new CategoryDTO(category);
         }
 
         public async Task<IEnumerable<CategoryDTO>> ListAsync()
@@ -36,12 +32,8 @@ namespace MovieLibrary.Core.Services
             if (categories is null) return null;
 
             return await (from c in categories
-                    select new CategoryDTO()
-                    {
-                        Id = c.Id,
-                        Name = c.Name,
-                    })
-                    .ToListAsync();
+                        select new CategoryDTO(c)
+                        ).ToListAsync();
         }
     }
 }
