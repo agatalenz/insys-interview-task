@@ -1,6 +1,8 @@
 ﻿using MovieLibrary.Core.DTOs;
+using MovieLibrary.Data.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,10 +10,11 @@ namespace MovieLibrary.Core.Services
 {
     public interface ICategoryService
     {
-        Task<CategoryDTO> GetCategoryByIdAsync(int id);
-        Task<IEnumerable<CategoryDTO>> ListAsync();
-        Task<int?> AddCategory(CategoryCreateDTO category);
+        Task<Category> GetCategoryByIdAsync(int id);
+        IQueryable<Category> List();
+        //Task<IEnumerable<Category>> ListAsync();
+        Task<int?> AddCategory(string name);
         Task<bool> DeleteCategory(int id);
-        Task<CategoryDTO> UpdateCategory(CategoryDTO category);
+        Task<Category> UpdateCategory(Category category);
     }
 }

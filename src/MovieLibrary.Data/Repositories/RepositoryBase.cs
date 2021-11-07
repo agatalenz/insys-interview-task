@@ -36,10 +36,12 @@ namespace MovieLibrary.Data.Repositories
         public virtual IQueryable<TEntity> List()
              => _context.Set<TEntity>().OrderBy(entity => entity.Id);
 
-        public async virtual Task UpdateAsync(TEntity entity)
+        public async virtual Task<TEntity> UpdateAsync(TEntity entity)
         {
-            _context.Set<TEntity>().Update(entity);
+            var result = _context.Set<TEntity>().Update(entity);
             await _context.SaveChangesAsync();
+
+            return result.Entity;
         }
     }
 }

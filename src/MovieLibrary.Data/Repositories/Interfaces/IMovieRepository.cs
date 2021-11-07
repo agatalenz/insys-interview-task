@@ -8,6 +8,5 @@ namespace MovieLibrary.Data.Repositories
 {
     public interface IMovieRepository : IRepositoryBase<Movie>
     {
-        Task<IEnumerable<Movie>> ListAsync();
     }
 }

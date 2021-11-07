@@ -19,14 +19,14 @@ namespace MovieLibrary.Core.Services
             _repository = repository;
         }
 
-        public async Task<int?> AddCategory(CategoryCreateDTO category)
+        public async Task<int?> AddCategory(string name)
         {
-            var exist = await _repository.ExistAsync(category.Name);
+            var exist = await _repository.ExistAsync(name);
             if (exist) return null;
 
             return await _repository.CreateAsync(new Category() 
             {
-                Name = category.Name
+                Name = name
             });
         }
 
@@ -39,25 +39,17 @@ namespace MovieLibrary.Core.Services
             return true;
         }
 
-        public async Task<CategoryDTO> GetCategoryByIdAsync(int id)
+        public async Task<Category> GetCategoryByIdAsync(int id)
         {
-            var category = await _repository.GetByIdAsync(id);
-            if (category is null) return null;
-
-            return new CategoryDTO(category);
+            return await _repository.GetByIdAsync(id);
         }
 
-        public async Task<IEnumerable<CategoryDTO>> ListAsync()
+        public IQueryable<Category> List()
         {
-            var categories = _repository.List();
-            if (categories is null) return null;
-
-            return await (from c in categories
-                        select new CategoryDTO(c))
-                        .ToListAsync();
+            return _repository.List();
         }
 
-        public async Task<CategoryDTO> UpdateCategory(CategoryDTO c)
+        public async Task<Category> UpdateCategory(Category c)
         {
             var category = await _repository.GetByIdAsync(c.Id);
             if (category is null) return null;
@@ -66,9 +58,7 @@ namespace MovieLibrary.Core.Services
             if (exist) return null;
 
             category.Name = c.Name;
-
-            await _repository.UpdateAsync(category);
-            return await GetCategoryByIdAsync(category.Id);
+            return await _repository.UpdateAsync(category);
         }
     }
 }

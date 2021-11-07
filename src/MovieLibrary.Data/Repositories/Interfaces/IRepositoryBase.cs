@@ -10,7 +10,7 @@ namespace MovieLibrary.Data.Repositories
     public interface IRepositoryBase<TEntity> where TEntity : EntityBase
     {
         Task<int> CreateAsync(TEntity entity);
-        Task UpdateAsync(TEntity entity);
+        Task<TEntity> UpdateAsync(TEntity entity);
         Task DeleteAsync(TEntity entity);
         IQueryable<TEntity> List();
         Task<TEntity> GetByIdAsync(int id);

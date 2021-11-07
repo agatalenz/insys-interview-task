@@ -10,6 +10,5 @@ namespace MovieLibrary.Core.DTOs
         public string Description { get; set; }
         public int Year { get; set; }
         public decimal ImdbRating { get; set; }
-        public IEnumerable<CategoryDTO> Categories { get; set; }
     }
 }

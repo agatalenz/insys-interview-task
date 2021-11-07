@@ -29,6 +29,7 @@ namespace MovieLibrary.Api
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Movie library API", Version = "v1" });
             });
 
+            services.AddScoped<IMovieFilterService, MovieFilterService>();
             services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<ICategoryService, CategoryService>();
 

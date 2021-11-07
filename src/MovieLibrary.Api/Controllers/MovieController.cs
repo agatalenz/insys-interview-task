@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieLibrary.Core.DTOs;
 using MovieLibrary.Core.Services;
+using MovieLibrary.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace MovieLibrary.Api.Controllers
         }
 
         [HttpGet("{movieId}")]
-        public async Task<ActionResult<MovieDTO>> GetMovieById([FromRoute] int movieId)
+        public async Task<ActionResult<Movie>> GetMovieById([FromRoute] int movieId)
         {
             var movie = await _service.GetMovieByIdAsync(movieId);
 
@@ -36,9 +37,9 @@ namespace MovieLibrary.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies()
+        public ActionResult<IEnumerable<Movie>> GetMovies()
         {
-            var movies = await _service.ListAsync();
+            var movies = _service.List();
 
             if (movies is null)
             {
@@ -80,19 +81,19 @@ namespace MovieLibrary.Api.Controllers
             }
         }
 
-        //[HttpPut]
-        //public async Task<ActionResult<MovieDTO>> UpdateCategory([FromBody] MovieDTO movie)
-        //{
-        //    var c = await _service.UpdateMovie(movie);
+        [HttpPut]
+        public async Task<ActionResult<Movie>> UpdateMovie([FromBody] Movie movie)
+        {
+            var c = await _service.UpdateMovie(movie);
 
-        //    if (c != null)
-        //    {
-        //        return Ok(c);
-        //    }
-        //    else
-        //    {
-        //        return NotFound();
-        //    }
-        //}
+            if (c != null)
+            {
+                return Ok(c);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }

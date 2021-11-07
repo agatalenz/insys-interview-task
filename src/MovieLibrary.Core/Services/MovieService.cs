@@ -1,8 +1,6 @@
 ﻿using MovieLibrary.Core.DTOs;
 using MovieLibrary.Data.Repositories;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MovieLibrary.Data.Entities;
 
@@ -37,26 +35,27 @@ namespace MovieLibrary.Core.Services
             return true;
         }
 
-        public async Task<MovieDTO> GetMovieByIdAsync(int id)
+        public async Task<Movie> GetMovieByIdAsync(int id)
         {
-            var movie = await _repository.GetByIdAsync(id);
-            if (movie is null) return null;
-
-            return new MovieDTO(movie);
+            return await _repository.GetByIdAsync(id);
         }
 
-        public async Task<IEnumerable<MovieDTO>> ListAsync()
+        public IEnumerable<Movie> List()
         {
-            var movies = await _repository.ListAsync();
-            if (movies is null) return null;
-
-            return from m in movies
-                   select new MovieDTO(m);
+            return _repository.List();
         }
 
-        public Task<MovieDTO> UpdateMovie(MovieDTO movie)
+        public async Task<Movie> UpdateMovie(Movie movie)
         {
-            throw new NotImplementedException();
+            var m = await _repository.GetByIdAsync(movie.Id);
+            if (m is null) return null;
+
+            m.Title = movie.Title;
+            m.Description = movie.Description;
+            m.Year = movie.Year;
+            m.ImdbRating = movie.ImdbRating;
+
+            return await _repository.UpdateAsync(m);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieLibrary.Core.DTOs;
 using MovieLibrary.Core.Services;
+using MovieLibrary.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace MovieLibrary.Api.Controllers
         }
 
         [HttpGet("{categoryId}")]
-        public async Task<ActionResult<CategoryDTO>> GetCategoryById([FromRoute] int categoryId)
+        public async Task<ActionResult<Category>> GetCategoryById([FromRoute] int categoryId)
         {
             var category = await _service.GetCategoryByIdAsync(categoryId);
 
@@ -35,9 +36,9 @@ namespace MovieLibrary.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetCategories()
+        public ActionResult<IEnumerable<Category>> GetCategories()
         {
-            var categories = await _service.ListAsync();
+            var categories = _service.List();
 
             if (categories is null)
             {
@@ -49,10 +50,10 @@ namespace MovieLibrary.Api.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<int?>> AddCategory([FromBody] CategoryCreateDTO category)
+        [HttpPost("{name}")]
+        public async Task<ActionResult<int?>> AddCategory([FromRoute] string name)
         {
-            int? id = await _service.AddCategory(category);
+            int? id = await _service.AddCategory(name);
 
             if (id is null)
             {
@@ -79,19 +80,19 @@ namespace MovieLibrary.Api.Controllers
             }
         }
 
-        //[HttpPut]
-        //public async Task<ActionResult<CategoryDTO>> UpdateCategory([FromBody] CategoryDTO category)
-        //{
-        //    var c = await _service.UpdateCategory(category);
+        [HttpPut]
+        public async Task<ActionResult<Category>> UpdateCategory([FromBody] Category category)
+        {
+            var c = await _service.UpdateCategory(category);
 
-        //    if (c != null)
-        //    {
-        //        return Ok(c);
-        //    }
-        //    else
-        //    {
-        //        return NotFound();
-        //    }
-        //}
+            if (c != null)
+            {
+                return Ok(c);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }
